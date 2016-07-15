@@ -1,0 +1,102 @@
+
+
+header {
+    background-color:black;
+    color:white;
+    padding:5px;	 
+}
+
+nav-e {
+    line-height:30px;
+    background-color:#eeeeee;
+    height:160px;
+    
+    float:left;
+    padding:5px;	      
+}
+section {
+    width:500px;
+    float:left;
+    padding:10px;	 	 
+}
+body {
+    background:linear-gradient(to bottom, #c2d6d6 , white);
+}
+footer {
+    color:black;
+    clear:both;
+    padding:5px;
+}
+.footer-text {
+    text-align:center;
+}
+
+.input-div {
+    margin: 0px 0px 10px 0px;
+}
+
+.input-space {
+    margin-left:5px
+}
+h2 {
+    font-family: "Times New Roman", Times, serif;
+}
+.input-xs {
+    height: 30px;
+    width: 60px;
+    padding: 0px 5px;
+    font-size: 14px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+.small-p {
+    font-size: .9em;
+}
+
+.smaller-p {
+    font-size: .8em;
+}
+
+.checkitem {
+    display: inline-block;
+}
+
+.output_textarea {
+    height: 100px;
+}
+
+.radio-label {
+    margin: 0 10px 0 5px;
+}
+
+.h-title {
+    margin: 20px 0 20px 0;
+    padding-bottom: 100px;
+    border-bottom: 1px solid #000000
+}
+
+.err {
+    color: red;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+table {
+    border-spacing: 5px;
+}
+th,td {
+    padding: 7px;
+}
+.stdouttextarea {
+    overflow-y: scroll;
+    height: 600px;
+}
+.codetextarea {
+    overflow-y: scroll;
+    height: 300px;
+}
+.divspace {
+    margin: 20px 0px 20px 0px;
+}
