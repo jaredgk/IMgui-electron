@@ -1,0 +1,104 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>IMfig</title>
+        <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="main.css">
+    </head>
+    <script src="/socket.io/socket.io.js"></script>
+    <header>
+
+        <h2 style="text-align:center">IMfig</h2>
+        <nav class="navbar navbar-inverse">
+        
+            <ul class="nav navbar-nav">
+                <li><a href="./">Job Manager</a></li>
+                <li><a href="analysis.html">Analyze Output Files</a></li>
+                <li class="active"><a href="imfig.html">IMfig</a></li>
+                <li><a target="_blank" href="help.html">Help</a></li>
+            </ul>
+        </nav>
+    </header>
+    <body>
+        <div class="container col-xs-9" id="main-div">
+            <form role="form" id="imfig-form">
+                <div class="form-group">
+                    <label for="input-file">Input File (Required)</label>
+                    <input type="text" class="form-control" id="input-file">
+                </div>
+                <div class="form-group">
+                    <label for="output-file">Output File Prefix (no directory)</label>
+                    <input type="text" class="form-control" id="output-file">
+                </div>
+                <div class="form-group">
+                    <label for="font-type">Font (default is Arial)</label>
+                    <input type="text" class="form-control" id="font-type">
+                </div>
+                <div>
+                    <input type="number" id="b-width" class="input-xs">
+                    <label for="b-width">Adjust width of Population Boxes (values &gt 0, default = 1)</label>
+                </div>
+                <div>
+                    <input type="number" id="g-scale" class="input-xs">
+                    <label for="g-scale">Global plot scale (0 &lt value &lt= 1, default = 1)</label>
+                </div>
+                <div>
+                    <input type="number" id="h-arrow" class="input-xs">
+                    <label for="h-arrow">Arrow width (default = 1)</label>
+                </div>
+                <div>
+                    <input type="number" id="p-font" class="input-xs">
+                    <label for="p-font">Font size, scales with -g (default = 14)</label>
+                </div>
+                <div>
+                    <input type="number" id="t-height" class="input-xs">
+                    <label for="t-height">Relative Height of Oldest Time Point (0 <= value <= 1, default is 1/(number of populations)</label>
+                </div>
+                <div>
+                    <input type="number" id="x-width" class="input-xs">
+                    <label for="x-width">Adjust Width of Plot (value > 0, > 1 for wider, &lt 1 for narrower)</label>
+                </div>
+                <div>
+                    <input type="number" id="y-height" class="input-xs">
+                    <label for="y-height">Adjust Height of Splittimes (0 &lt value &lt= 1)</label>
+                </div>
+                <div>
+                    <label for="m-flag">Migration Arrows: </label>
+                    <input type="radio" name="m-flag" value="s" class="radio-label" id="ms" checked><label for="ms" class="radio-label">Arrows When 2NM is Statistically Significant</label>
+                    <input type="radio" name="m-flag" value="a" class="radio-label" id="ma"><label for="ma" class="radio-label">Arrows For All 2NM > 0</label>
+                    <input type="radio" name="m-flag" value="n" class="radio-label" id="mn"><label for="mn" class="radio-label">Arrows For All 2NM Over: </label><input type="number" id="m-number" class="input-xs">
+                </div>
+                <div>
+                    <p class="small-p"><input type="checkbox" id="a-check">Include Ancestral Population #'s in Plot</p>
+                    <p class="small-p"><input type="checkbox" id="e-check">Space Split Times Evenly (no confidence intervals)</p>
+                    <p class="small-p"><input type="checkbox" id="d-check">Do Not Use Demographic Scale Information</p>
+                    <p class="small-p"><input type="checkbox" id="s-check">Print Square, Rather Than Landscape</p>
+                    <p class="small-p"><input type="checkbox" id="u-check">Simple colors, blue for population boxes and red for migration</p>
+                    <p class="small-p"><input type="checkbox" id="v-check">Multiple colors for population boxes, red arrows for migration</p>
+                </div>
+                <button type="button" id="submit-button">Submit</button>
+                <div id="image-div" hidden>
+                    <p class="small-p">To download .jpg, right click on image and select "Save Image As..."</p>
+                    <p class="small-p" id="eps-path"></p>
+                    <img id="server_image" src="">
+                </div>
+            </form>
+        </div>
+        <footer>
+            <hr style="border-top: 1px solid #000">
+        <img src="ccgg_tp.png" style="float:left">
+        <img src="color_pan.jpg" style="float:right">
+            <p class="smaller-p footer-text">IMgui: A browser-based GUI for Isolation with Migration Analyses</p>
+            <p class="smaller-p footer-text">Version 0.0.1</p>
+            <p class="smaller-p footer-text">Copyright Jared Knoblauch, Arun Sethuraman, and Jody Hey (2016)</p>
+            <p class="smaller-p footer-text">To report issues, contact Jared Knoblauch at <a href="mailto:jaredknoblauch@gmail.com">jaredknoblauch@gmail.com</a></p>
+        </footer>
+        <!-- jQuery library -->
+        <script src="jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+        <script src="bootstrap.min.js"></script>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="imfig_functions.js"></script>
+    </body>
+</html>

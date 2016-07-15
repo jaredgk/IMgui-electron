@@ -1,0 +1,75 @@
+# all possible nested models for two populations,  including those with one or both migration rates set to zero
+24
+# models in which all population size parameters are distinct
+model equal migration rates
+equal m 0 1 
+model coalescent migration rate zero from 0 to 1
+constant m 0.0 0
+model coalescent migration rate zero from 1 to 0
+constant m 0.0 1
+model migration rates zero
+constant m 0.0  0 1
+
+# models in which population size 0 is equal to population size 1
+model population size 0 equal to population size 1
+equal p 0 1
+model population size 0 equal to population size 1, migration rates equal
+equal p 0 1
+equal m 0 1 
+model population size 0 equal to population size 1, coalescent migration rate zero from 0 to 1
+equal p 0 1
+constant m 0.0 0
+model population size 0 equal to population size 1, coalescent migration rate zero from 1 to 0
+equal p 0 1
+constant m 0.0 1
+model population size 0 equal to population size 1, migration rates zero
+equal p 0 1
+constant m 0.0  0 1
+
+# models in which population size 0 is equal to population size 2 (ancestral population size)
+model population size 0 equal to population size 2 (ancestral population size)
+equal p 0 2
+model population size 0 equal to population size 2 (ancestral population size), migration rates equal
+equal p 0 2
+equal m 0 1 
+model population size 0 equal to population size 2, coalescent migration rate zero from 0 to 1
+equal p 0 2
+constant m 0.0 0
+model population size 0 equal to population size 2, coalescent migration rate zero from 1 to 0
+equal p 0 2
+constant m 0.0 1
+model population size 0 equal to population size 2 (ancestral population size), migration rates zero
+equal p 0 2
+constant m 0.0  0 1
+
+# models in which population size 1 is equal to population size 2 (ancestral population size)
+model population size 1 equal to population size 2 (ancestral population size)
+equal p 1 2
+model population size 1 equal to population size 2 (ancestral population size), migration rates equal
+equal p 1 2
+equal m 0 1 
+model population size 1 equal to population size 2, coalescent migration rate zero from 0 to 1
+equal p 1 2
+constant m 0.0 0
+model population size 1 equal to population size 2, coalescent migration rate zero from 1 to 0
+equal p 1 2
+constant m 0.0 1
+model population size 1 equal to population size 2 (ancestral population size), migration rates zero
+equal p 1 2
+constant m 0.0  0 1
+
+# models in which all three population sizes are equal
+model population sizes all equal
+equal p 0 1 2
+model population sizes all equal,  migration rates equal
+equal p 0 1 2
+equal m 0 1 
+model population sizes all equal, coalescent migration rate zero from 0 to 1
+equal p 0 1 2
+constant m 0.0 0
+model population sizes all equal, coalescent migration rate zero from 1 to 0
+equal p 0 1 2
+constant m 0.0 1
+model population sizes all equal,  migration rates zero
+equal p 0 1 2
+constant m 0.0  0 1

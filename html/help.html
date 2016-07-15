@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>IMgui Help</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    </head>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+    </script>
+    <header>
+
+        <h2 style="text-align:center">Help</h2>
+    </header>
+    <body>
+        <div class="container col-xs-8">
+            <h1 class="h-title">How to use IMgui</h1>
+            <div id="command-line-help">
+                <h3>Job Running</h3>
+                <h4>Providing input parameters</h4>
+                <p>In order to start a job, input parameters must be provided in accordance with the <a href="https://bio.cst.temple.edu/~hey/program_files/IMa2/Using_IMa2_8_24_2011.pdf" target="_blank">IMa2 manual.</a> Required parameters are noted on the input form. Once all parameters have been input, clicking on the "Execute" button will run through validation steps:</p>
+                <ul>
+                    <li>The browser will check that all required fields have been provided, and that no incompatible options have been selected</li>
+                    <li>If "Validate that input files are present before run" box is checked, the node.js server will check to make sure all input files that have been provided are present on the user's computer (it will not validate the file content, just the name)</li>
+                    <li>The node.js server will check that the output prefix provided is not being used by another job</li>
+                </ul>
+                <p>Any errors will be reported under the "Execute" button.</p>
+                <p>Once a job is validated, the node.js server will add the job to the job list, then start the job. Stdout from jobs will be stored on the server, and the user can select which job's stdout stream to view in the browser. There are four buttons that can be clicked during a job:</p>
+                <ul>
+                    <li>Kill Job: Stops active job. Job can then be restarted or removed from job list.</li>
+                    <li>Send IMburn/run signal: If either burn or run duration is set to be user-controlled ("Duration of burn" and/or "Run duration" values are floating point, not integer, and their respective file creation check boxes have been selected), this button will be enabled when the program is waiting for a user signal to end the current phase. Clicking will signal program to advance to next stage.</li>
+                    <li>Restart Job: Restarts job with same parameters as initially provided (changing them in the web browser form will NOT change the job information).</li>
+                    <li>Remove Job Information: Will remove job from job list, also frees up output prefix for use with a different job.</li>
+                    <li>Refresh: Will refresh the output from the current job. Use if output appars out of order.</li>
+                </ul>
+            </div>
+            <div id="analysis-help">
+                <h3>Output XML File Analysis</h3>
+                <p>To start, click "Choose File" and select one of the output XML files from a job. Note: the browser will check the suffix of the file to determine what output file it is, so if you rename output files be sure to keep the ".out.xml" or ".out.histograms.xml" suffix.</p>
+                <h4>Tables (*.out.xml)</h4>
+                <p>Once the XML file is processed, the tables included in the file will be added to the drop-down menu, with the first table present automatically generated and displayed. To save the active table, provide a filename or prefix (optional) and click either "Save as .csv" or "Save as .png". If no prefix is provided, a default will be used.</p>
+                <h4>Histograms (*out.histograms.xml)</h4>
+                <p>Once the XML file is processed, there will be two dropdown menus. The first dropdown menu will have a list of the types of variables contained in the file, the second dropdown will have a list of the available variables in the given list. Clicking "Make Graph" will render the graph in the browser window.</p>
+                <h5>Downloading Image/Data</h5>
+                <p>To download the information from the chart selected, provide a filename or prefix in the input field (optional) and click either "Save Image as .png" or "Save Columns as .csv". The .png option will save an image of the graph, the .csv option will output a two-column, comma separated file.</p>
+                <h5>Generating Code for Plot</h5>
+                <p>Below the graph there is a code window that will generate code in either Matplotlib (Python), R, or Matlab. Clicking "Generate Code" will create a basic script that can be run to generate a simple plot, allowing the user to add additional information or features to the plot. The code can either be copied and pasted into an IDE or downloaded as a separate script. If a value is provided in the "Maximum line length" field, the arrays storing the data will be spread over multiple lines.</p>
+            </div>
+            <div id="imfig-help">
+                <h3>IMfig</h3>
+                <p>IMfig is a python script that has been converted to executable for for use on platforms without Python and GraphicsMagick. It generates a summary plot describing migration rates between populations. To generate the plot, provide the path to the non-XML output file in the "Input File" field. The output prefix is optional but must NOT contain any directory prefix, since get requests for the final image must be done from the internally specified output folder. All other options are optional. When submit is clicked, values are validated to ensure they fall in a proper range, with error messages being presented under options that have invalid values. The job is then sent to the server, which will create an EPS and JPG file for the given input. The JPG image will be posted to the web browser, where it can be downloaded via right-click. The EPS file will still be present in the public/ directory.</p>
+            </div>
+        </div>
+        <footer>
+            <hr style="border-top: 1px solid #000">
+        <img src="ccgg_tp.png" style="float:left">
+        <img src="color_pan.jpg" style="float:right">
+            <p class="smaller-p footer-text">IMgui: A browser-based GUI for Isolation with Migration Analyses</p>
+            <p class="smaller-p footer-text">Version 0.0.1</p>
+            <p class="smaller-p footer-text">Copyright Jared Knoblauch, Arun Sethuraman, and Jody Hey (2016)</p>
+            <p class="smaller-p footer-text">To report issues, contact Jared Knoblauch at <a href="mailto:jaredknoblauch@gmail.com">jaredknoblauch@gmail.com</a></p>
+        </footer>
+    </body>
+</html>

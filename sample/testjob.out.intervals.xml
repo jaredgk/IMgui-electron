@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<Intervals>
+    <AcceptanceRates>
+        <UpdateRates>Update Rates -- Population Splitting Times
+            <Head>NielsenWakeley  RannalaYang  </Head>
+            <Subhead>#Tries  #Accp  %</Subhead>
+            <Data>
+                <Row>_t0  2.36e4  9.85e3  41.7217  2.37e4  1.48e4  62.519  </Row>
+                <Row>_t1  2.36e4  1.74e4  74.0459  2.34e4  1.89e4  80.8212  </Row>
+                <Row>_t2  2.35e4  1.70e4  72.41  2.34e4  2.07e4  88.4827  </Row>
+            </Data>
+        </UpdateRates>
+        <UpdateRates>Update Rates -- Genealogies
+            <Head>branch       topology     tmrca        </Head>
+            <Subhead>#Tries  #Accp  %</Subhead>
+            <Data>
+                <Row>_gtree_0  1.41e5  2.79e4  19.7662  1.41e5  3.26e3  2.30905  1.41e5  5.59e3  3.95919  </Row>
+                <Row>_gtree_1  1.41e5  3.57e4  25.2997  1.41e5  5.23e3  3.70412  1.41e5  3.06e3  2.17089  </Row>
+                <Row>_gtree_2  1.41e5  2.81e4  19.881  1.41e5  8.37e3  5.92886  1.41e5  3.64e3  2.57687  </Row>
+                <Row>_gtree_3  1.41e5  1.79e4  12.652  1.41e5  3.22e3  2.28284  1.41e5  2.78e3  1.96968  </Row>
+                <Row>_gtree_4  1.41e5  1.13e4  7.9864  1.41e5  1.36e3  0.961457  1.41e5  1.85e3  1.31359  </Row>
+            </Data>
+        </UpdateRates>
+        <UpdateRates>Update Rates -- Mutation Rate Scalars
+            <Head>scalar update  </Head>
+            <Subhead>#Tries  #Accp  %</Subhead>
+            <Data>
+                <Row>_0u   5.62e4  1.15e4  20.4064  </Row>
+                <Row>_1u   5.66e4  1.32e3  2.32928  </Row>
+                <Row>_2SW0  5.67e4  1.61e4  28.3381  </Row>
+                <Row>_3SW0  5.64e4  1.77e4  31.3855  </Row>
+                <Row>_3SW1  5.66e4  1.71e4  30.135  </Row>
+                <Row>_4u   5.65e4  9.44e3  16.7239  </Row>
+                <Row>_4SW1  5.62e4  1.51e4  26.8976  </Row>
+            </Data>
+        </UpdateRates>
+        <UpdateRates>Update Rates -- HKY Model Kappa parameter
+            <Head>kappa update  </Head>
+            <Subhead>#Tries  #Accp  %</Subhead>
+            <Data>
+                <Row>_1_Ka  5.65e4  1.32e3  2.33134  </Row>
+            </Data>
+        </UpdateRates>
+    </AcceptanceRates>
+    <CurrentVals>
+        <ValTable>Current Splitting Time Values
+            <Head>Time   Value</Head>
+            <Data>
+                <Row>t0  1.977  </Row>
+                <Row>t1  1.978  </Row>
+                <Row>t2  1.993  </Row>
+            </Data>
+        </ValTable>
+    </CurrentVals>
+</Intervals>
