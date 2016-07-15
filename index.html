@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>IMgui</title>
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+    </head>
+    <header>
+
+        <h2 style="text-align:center">Form for IMa command line</h2>
+        <nav class="navbar navbar-inverse">
+        
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="./">Job Manager</a></li>
+                <li><a href="#" onClick="return false;" id="analyze-link">Analyze Output Files</a></li>
+                <li><a href="#" onClick="return false;" id="imfig-link">IMfig</a></li>
+                <li><a href="#" onClick="return false;" id="help-link">Help</a></li>
+            </ul>
+        </nav>
+    </header>
+    <body>
+        <section>
+            <div class="container">
+                <div class="col-xs-12">
+                <button type="button" class="btn btn-default" id="demo-input">Demo Job</button>
+                <form role="form" id="form1">
+                    <div id="mode-select">
+                        <input type="radio" name="run-mode" value="m" class="radio-label modeswitch" id="mcmc" checked><label for="mcmc" class="radio-label">MCMC Mode</label>
+                        <input type="radio" name="run-mode" value="l" class="radio-label modeswitch" id="lg"><label for="lg" class="radio-label">Load Genealogy Mode</label>
+                    </div>
+                    <div class="form-group" id="dir-div">
+                        <label for="working-dir">Working Directory (optional)</label>
+                        <input type="text" class="form-control" id="working-dir">
+                    </div>
+                    <div class="form-group" id="in-div">
+                        <label for="infile">Input File (-i)</label>
+                        <input type="text" class="form-control" id="infile">
+                    </div>
+                    <div class="form-group" id="out-div">
+                        <label for="outtag">Output file directory and tag (-o)</label>
+                        <input type="text" class="form-control" id="outtag">
+                    </div>
+                    <div class="form-group" id="name-div">
+                        <label for="nametag">Name for job (optional)</label>
+                        <input type="text" class="form-control" id="nametag">
+                    </div>
+                    <div>
+                        
+                        <div id="burn-div">
+                            <input type="text" class="input-xs mcmc-el" id="burn" min=0><label for="burn">Duration of burn, steps if integer (e.g. 100000), float for hours using user-controlled duration  (-b) (MCMC only/required)</label><br>
+                        </div>
+                        <input type="text" class="input-xs mcmc-el" id="gene-save" min=0><label for="gene-save">Number of steps between genealogy saving, default is 100 (-d) (MCMC only)</label><br>
+                        <div id="run-div">
+                            <input type="text" class="input-xs" id="run-time" min=0><label for="run-time">Run duration, in steps if integer, in hours if float for user-controlled duration (-L) (required)</label><br>
+                        </div>
+                        <input type="text" class="input-xs mcmc-el" id="out-step" min=1><label for="out-step">Number of steps between terminal output, default is 10000 (-z) (MCMC only)</label><br>
+                        <input type="text" class="input-xs" id="seed"><label for="seed">Random number seed (-s) (default is time at execution)</label><br>
+                        <input type="number" class="input-xs" id="num-process"><label for="num-process">Number of processors to run on</label>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-default btn-block" data-toggle="collapse" id="b1" data-target="#t">Population Size and Migration Prior Parameters (Required)</button>
+                        <div id="t" class="collapse">
+                            <div id="mps-div">
+                                <input type="text" id="mps" class="input-xs">
+                                <label for="mps">Max Population Size (-q)</label><br>
+                            </div>
+                            <div id="mpv-div">
+                                <input type="text" id="mpv" class="input-xs">
+                                <label for="mpv">Migration Prior Values (-m)</label><br>
+                            </div>
+                            <div id="mtps-div">
+                                <input type="text" id="mtps" class="input-xs">
+                                <label for="mtps">Maximum Time of Population Splitting (-t)</label><br>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-default btn-block" data-toggle="collapse" id="b2" data-target="#t2">Calculation Options (-c)
+                        </button>
+                        <div id="t2" class="collapse">  
+                            <p class="small-p"><input type="checkbox" id="c1">0: Likelihood of data functions returns a constant</p>
+                            <p class="small-p"><input type="checkbox" id="c2">1: Include ranges of mutation rates as priors on mutation rate scalar</p>
+                            <p class="small-p"><input type="checkbox" class="gl-el" id="c3" disabled>2: Joint posterior density calculations, for LLR tests of nested models</p>
+                            <div id="c3_text" class="collapse">
+                                <label for="nestedf">Name of file with nested models to be tested:</label>
+                                <input type="text" class="form-control" id="nestedf">
+                            </div>
+                            <p class="small-p"><input type="checkbox" id="c4">3: Get prior distribution terms from file</p>
+                            <div id="c4_text" class="collapse">
+                                <label for="paramf">File name:</label>
+                                <input type="text" class="form-control" id="paramf">
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-default btn-block" data-toggle="collapse" id="b3" data-target="#t3">Model Options (-j)
+                        </button>
+                        <div id="t3" class="collapse">
+                            <div class="inc_j1_p5">
+                            <p class="small-p"><input type="checkbox" id="j1">1: Migration only between sister populations (no migration between non-sister populations)</p>
+                            </div>
+                            <div class="inc_j2_p6">
+                            <p class="small-p"><input type="checkbox" id="j2">2: One migration parameter for each pair of populations (Incompatible with option p5)</p>
+                            </div>
+                            <p class="small-p"><input type="checkbox" id="j3">3: Migration only between sampled populations (ancestral populations have zero migration)</p>
+                            <p class="small-p"><input type="checkbox" id="j4">4: Add a non-sampled ghost population to the model</p>
+                            <p class="small-p"><input type="checkbox" id="j5">5: Separate population size and migration parameters in each period (lots of parameters)</p>
+                            <p class="small-p"><input type="checkbox" id="j6">6: No migration in the model</p>
+                            <p class="small-p"><input type="checkbox" id="j7">7: Migration prior follows exponential distribution with mean given by -m or in parameter file</p>
+                            <p class="small-p"><input type="checkbox" id="j8">8: Each ancestral population size is assumed to be identical to that of their largest descendant population</p>
+                            <div class="inc_j9_p6">
+                            <p class="small-p"><input type="checkbox" id="j9">9: One single migration parameter for all pairs of populations (incompatible with option p5)</p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-default btn-block" data-toggle="collapse" id="b4" data-target="#t4">Output Options (-p)
+                        </button>
+                        <div id="t4" class="collapse">
+                            <p class="small-p"><input type="checkbox" id="p1">0: Turn off trend plots in outfile (default is to print trend plots)</p>
+                            <p class="small-p"><input type="checkbox" id="p2">1: Turn off plots of marginal curves in outfile (default is to print marginal density plots)</p>
+                            <p class="small-p"><input type="checkbox" class="mcmc-el" id="p3">2: Print TMRCA histogram for each genealogy (MCMC mode only)</p>
+                            <p class="small-p"><input type="checkbox" id="p4">3: Print histogram of parameters on demographic scales (requires mutation rates in data file)</p>
+                            <div id="p4_number" class="collapse">
+                                <input type="text" class="input-xs" id="gen-time"><label for="gen-time">Generation time in years</label><br>
+                                <input type="text" class="input-xs" id="mut-rate"><label for="mut-rate">Mutation rate scalar for relevant loci</label>
+                            </div>
+                            <div class="inc_j1_p5">
+                            <p class="small-p"><input type="checkbox" id="p5">4: Print histogram of splitting times divided by prior (do not use with -j0)</p>
+                            </div>
+                            <div class="inc_j2_p6 inc_j9_p6">
+                            <p class="small-p"><input type="checkbox" id="p6">5: Print estimates and histograms of population migration rate (2NM)</p>
+                            </div>
+                            <p class="small-p"><input type="checkbox" id="p7">6: Print pairwise probabilities that one parameter is greater than another</p>
+                            <p class="small-p"><input type="checkbox" class="mcmc-el" id="p8">7: Print histograms of the number of migration events (MCMC mode only)</p>
+                            <p class="small-p"><input type="checkbox" class="mcmc-el" id="p9">8: Print joint estimate for splitting times (MCMC mode only, for populations with 3,4, or 5 populations)</p>
+                        </div>
+                        <button type="button" class="btn btn-default btn-block" data-toggle="collapse" id="b5" data-target="#t5">Run Options (-r)
+                        </button>
+                        <div id="t5" class="collapse">
+                            <p class="small-p"><input type="checkbox" class="gl-el" id="r1" disabled>0: LOAD-GENEALOGY Mode - load genealogies from previous run(s)</p>
+                            <div id="r1_text" class="collapse">
+                                <label for="titag">Base name for *.ti directory/files</label>
+                                <input type="text" class="form-control" id="titag">
+                            </div>
+                            <p class="small-p"><input type="checkbox" id="r2">1: Do not save genealogies to a file (default saves sampled genealogies)</p>
+                            <p class="small-p"><input type="checkbox" class="mcmc-el" id="r3">2: Save the state of the Markov chain in a file - named with extension .mcf (MCMC mode only)</p>
+                            <p class="small-p"><input type="checkbox" id="r4">3: Start run by loading a previously saved *.mcf file; requires -f (data and priors must be the same)</p>
+                            <div id="r4_text" class="collapse">
+                                <label for="mcftag">Name of Markov chain file</label>
+                                <input type="text" class="form-control" id="mcftag">
+                            </div>
+                            <p class="small-p"><input type="checkbox" id="r5">4: Write all mutation related update rates to stdout during the run (default is to suppress this)</p>
+                            <p class="small-p"><input type="checkbox" id="r6">5: Print burntrend file at end of burnin period</p>
+                        </div>
+                        <button type="button" class="btn btn-default btn-block" data-toggle="collapse" id="b6" data-target="#t6">Heating terms (MCMC only)
+                        </button>
+                        <div id="t6" class="collapse">
+                            <p class="small-p"><input type="checkbox" class="mcmc-el" id="mc-check">Include heating terms in command line</p>
+                            <p class="small-p">
+                                <input type="radio" name="heating-type" value="l" class="radio-label disableheat" id="linear" checked disabled><label for="linear" class="radio-label">Linear</label>
+                                <input type="radio" name="heating-type" value="g" class="radio-label disableheat" id="geometric" disabled><label for="geometric" class="radio-label">Geometric</label>
+                            </p>
+                            <div class="small-p">
+                                <div id="bnoc-div"><input type="text" id="burn-noc" class="input-xs disableheat" min=2 disabled><label for="burn-noc">Number of chains (-hn)</label><br></div>
+                                <div id="bswap-div"><input type="text" id="burn-swap" class="input-xs disableheat" disabled><label for="burn-swap">Number of chain swap events/step (-hk) (default: number of chains)</label><br></div>
+                                <div id="bfirst-div"><input type="text" id="burn-first" class="input-xs disableheat" min=0.9 max=1.1 disabled><label for="burn-first">First heating parameter (-ha)</label><br></div>
+                                <div id="bsecond-div"><input type="text" id="burn-second" class="input-xs disableheat" min=0 max=1 disabled><label for="burn-second">Second heating parameter (-hb)</label><br></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-default btn-block" data-toggle="collapse" id="imfile-toggle" data-target="#imfile-div">IMfile options</button>
+                        <div id="imfile-div" class="collapse">
+                            <p class="small-p"><input type="checkbox" id="imburn-check">Create IMburn file (only for runs where burn duration (-b) is a float)</p>
+                            <p class="small-p"><input type="checkbox" id="imrun-check">Create IMrun file (only for runs where run duration (-L) is a float)</p>
+                        </div>
+                        <button type="button" class="btn btn-default" id="bb">Execute</button><p class="small-p"><input type="checkbox" id="validate-check">Validate that input files are present before run</p>
+                        <br>
+                        <div id="error-field" hidden>
+                            <p style="color:red">Cannot validate, the following issues are present:<br></p>
+                        </div>
+                    </div>
+                    <br>
+                    <div id="runinfodiv">
+                        <label for="jobselect">Jobs Started:</label>
+                        <select id="jobselect" class="form-control">
+                        </select>
+                        <button type="button" class="btn btn-default" id="kill" disabled>Kill Job</button>
+                        <button type="button" class="btn btn-default" id="delburn" disabled>Delete IMburn file</button>
+                        <button type="button" class="btn btn-default" id="delrun" disabled>Delete IMrun file</button>
+                        <button type="button" class="btn btn-default" id="restart" disabled>Restart Job</button>
+                        <button type="button" class="btn btn-default" id="removejob" disabled>Remove Job Information</button>
+                        <button type="button" class="btn btn-default" id="refresh" disabled>Refresh Output</button>
+                        <textarea id="stdoutta" class="stdouttextarea col-xs-12"></textarea>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </section>
+<!-- jQuery library -->
+        <script>
+            window.$ = window.jQuery = require('./js/jquery.min.js');
+        </script>
+
+<!-- Latest compiled JavaScript -->
+        <script src="js/bootstrap.min.js"></script>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="js/form_functions.js"></script>
+        <script>
+            function fn() {
+                var thefile = document.getElementById("infile");
+                alert(thefile);
+            }
+            console.log('refresh should write this');
+            //getActiveLabels();
+            var sep = '/';
+            if(navigator.appVersion.indexOf("Win") != -1) { 
+                sep = '\\';
+            }
+            console.log(sep);
+        </script>
+        
+    </body>
+    <footer>
+            <hr style="border-top: 1px solid #000">
+        <img src="ccgg_tp.png" style="float:left">
+        <img src="color_pan.jpg" style="float:right">
+            <p class="smaller-p footer-text">IMgui: A browser-based GUI for Isolation with Migration Analyses</p>
+            <p class="smaller-p footer-text">Version 0.0.1</p>
+            <p class="smaller-p footer-text">Copyright Jared Knoblauch, Arun Sethuraman, and Jody Hey (2016)</p>
+            <p class="smaller-p footer-text">To report issues, contact Jared Knoblauch at <a href="mailto:jaredknoblauch@gmail.com">jaredknoblauch@gmail.com</a></p>
+        </footer>
+</html>

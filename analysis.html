@@ -1,0 +1,100 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>IMgui Output Analysis</title>
+        <link rel="stylesheet" type="text/css" href="css/c3.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+    </head>
+    <header>
+    <h2 style="text-align:center">Data Analysis</h2>
+    </header>
+    <body>
+        <section>
+            
+            <div class="container">
+                <p>To use, choose an XML output file from a job run. Examples can be found in the sample/ folder in the IMgui directory.</p>
+                <div id="xmldiv">
+                    <form role="form" id="formid">
+                        <div class="form-group">
+                            <input type="file" class="btn btn-default" id="xmlup">
+                            <button type="button" class="btn btn-default" id="xmlsb">Analyze</button><br>
+                        </div>
+                        <div id="select-div" class="form-group" hidden>
+                            <select id="selectid" class="form-control"><br>
+                            </select>
+                            <div id="svgdiv" hidden>
+                                <div id="svgvals" >
+                                    <select id="colid" class="form-control">
+                                    </select>
+                                    <button type="button" id="makegraph" class="btn ben-default">Make Graph</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="savefilechart" hidden>
+                            <input type="text" class="form-control" id="savefilevalchart">
+                            <button type="button" class="btn btn-default" id="savebutton">Save Image as .png</button>
+                            <a type="button" class="btn btn-default" id="savecolstocsv">Save Columns as .csv</a>
+                        </div>
+                        <div id="savefiletable" hidden>
+                            <input type="text" class="form-control" id="savefilevaltable">
+                            <a class="btn btn-default" id="tablesavecsv">Save as .csv</a>
+                            <button type="button" class="btn btn-default" id="tablesavepng">Save as .png</button>
+                        </div>
+                    </form>
+                    <div id="tablediv" hidden>                 
+                        <table style="width:70%" id="outtable">
+                        </table>
+                    </div>
+                    <div id="chartdiv" hidden>
+                        <svg id="chart" width="800" height="600"></svg>
+                        <button type="button" class="btn btn-default btn-block" data-toggle="collapse" id="codebutton" target="codediv">Code</button>
+                        <div id="codediv">
+                            <label for="codeselect">Select Language</label>
+                            <select id="codeselect" class="form-control">
+                                <option value="0">Matplotlib</option>
+                                <option value="1">R</option>
+                                <option value="2">Matlab</option>
+                            </select>
+                            <label for="code_line_length">Maximum line length (optional, default is none)</label>
+                            <br>
+                            <input type="number" class="input-xs" id="code_line_length">
+                            <br>
+                            <label for="code-prefix">Prefix for download name (optional)</label>
+                            <br>
+                            <input type="text" id="code-prefix" class="form-control">
+                            <button type="button" class="btn btn-default" id="codeproduce">Generate Code</button>
+                            <a type="button" class="btn btn-default" id="codedownload">Download Code</a>
+                            <textarea id="codearea" class="codetextarea col-xs-12" wrap="off"></textarea>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+        <!-- jQuery library -->
+        <script>
+            window.$ = window.jQuery = require('./js/jquery.min.js');
+        </script>
+<!-- Latest compiled JavaScript -->
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/electron-d3.min.js"></script>
+        <script src="js/c3.js"></script>
+        <script src="js/saveSvgAsPng.js"></script>
+        <script src="js/visual_functions.js"></script>
+        <script src="js/html2csv.js"></script>
+        <script src="js/exportcsv.js"></script>
+        <script src="js/tableExport.js"></script>
+        <script src="js/html2canvas.js"></script>
+        
+    </body>
+    <footer>
+            <hr style="border-top: 1px solid #000">
+        <img src="ccgg_tp.png" style="float:left">
+        <img src="color_pan.jpg" style="float:right">
+            <p class="smaller-p footer-text">IMgui: A browser-based GUI for Isolation with Migration Analyses</p>
+            <p class="smaller-p footer-text">Version 0.0.1</p>
+            <p class="smaller-p footer-text">Copyright Jared Knoblauch, Arun Sethuraman, and Jody Hey (2016)</p>
+            <p class="smaller-p footer-text">To report issues, contact Jared Knoblauch at <a href="mailto:jaredknoblauch@gmail.com">jaredknoblauch@gmail.com</a></p>
+        </footer>
+</html>
