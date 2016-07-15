@@ -1,4 +1,4 @@
-cd IMa
+cd IMa/
 if hash mpicxx 2>/dev/null; then
 	mpicxx -o IMa2 *.cpp -DMPI_ENABLED -DXML_ENABLED
 else
