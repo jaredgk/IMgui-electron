@@ -44,7 +44,7 @@ function createCmdLine() {
         ro.prefix = cc;
     } else {
         ro.prefix = 'im_fig_file';
-        args.push('-oim_fig_file');
+        args.push('-o'+pwd+sep+'im_fig_file');
     }
     cc = $('#font-type').val();
     if(cc.length !== 0) {

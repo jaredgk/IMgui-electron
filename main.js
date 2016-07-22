@@ -24,7 +24,7 @@ let imfigWindow;
 
 let helpWindow;
 
-var debug = 1;
+var debug = 0;
 var winheight = 768;
 var winwidth = 1024;
 
@@ -125,7 +125,7 @@ ipcMain.on('show-help', function () {
 var jobIdx = 0;
 var jobList = [];
 var IMA_PATH_UNIX = path.join(dirPath,'IMa','IMa2');
-var IMA_PATH_WIN = path.join(dirPath,'IMa','IMa2.exe');
+var IMA_PATH_WIN = path.join('resources','app','IMa','IMa2.exe');
 var IMFIG_PATH_UNIX = path.join(dirPath,'scripts','IMfig3');
 var IMFIG_PATH_MAC = path.join(dirPath,'scripts','IMfig3-mac');
 var IMFIG_PATH_WIN = path.join(dirPath,'scripts','IMfig3.exe');
