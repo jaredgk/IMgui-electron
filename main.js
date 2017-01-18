@@ -6,6 +6,8 @@ var spawn = require('child_process').spawn;
 var os = require('os');
 var fs = require('fs');
 var path = require('path');
+var { Menu } = require('electron');
+var sh = electron.shell;
 var require = electron.require;
 var ipcMain = electron.ipcMain;
 // Module to control application life.
@@ -24,16 +26,43 @@ let imfigWindow;
 
 let helpWindow;
 
+let textWindowArray = [];
+
 var debug = 0;
 var winheight = 768;
 var winwidth = 1024;
+var compile_multithread = 1; //Will disable multithread box in app if 0, enable if 1 and non-windows OS
+var jobList = [];
+
+function killRunningJobs() {
+    for(i = 0; i < jobList.length; i++) {
+        jobList[i].proc.kill('SIGINT');
+    }
+}
+
+function getSampleDir() {
+    if(os.platform() != 'darwin') { return __dirname; }
+    var o = __dirname.split(path.sep);
+    //console.log('o: '+o);
+    var o_s = path.parse(__dirname).root;
+    for(var i = 0; i < o.length - 4; i++) {
+        var t  = path.join(o_s,o[i]);
+        o_s = t;
+        //console.log(o_s);
+    }
+    //console.log(o_s);
+    return o_s;
+}
 
 function createWindow () {
   // Create the browser window.
     global.sharedObj = { 
       pwd: __dirname,
+      sampledir: getSampleDir(),
       homedir: process.env[(os.platform() === 'win32') ? 'USERPROFILE' : 'HOME'],
-      sep: ((os.platform() === 'win32') ? '\\' : '/')
+      sep: ((os.platform() === 'win32') ? '\\' : '/'),
+      mt: ((os.platform() === 'win32') ? 0 : compile_multithread),
+      os: os.platform()
   };
   mainWindow = new BrowserWindow({
       width: winwidth, 
@@ -57,7 +86,20 @@ function createWindow () {
     imfigWindow = null;
     helpWindow = null;
   })
-    
+  var template = [{
+      label: "Application",
+      submenu: [
+          { label: "Quit", accelerator: "Command+Q", click: function () { app.quit(); }}
+          ]},{
+      label: "Edit",
+        submenu: [ 
+            { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
+            { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
+            { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+            { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+            { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+            ]}];
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
 // This method will be called when Electron has finished
@@ -70,9 +112,14 @@ app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
-    app.quit()
+      app.quit()
   }
 })
+
+app.on('before-quit', function () {
+    jobIdx = -1;
+    killRunningJobs();
+});
 
 app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
@@ -103,9 +150,9 @@ ipcMain.on('show-imfig', function () {
       height: winheight
   });
   imfigWindow.loadURL('file://'+__dirname+'/imfig.html');
-    imfigWindow.show();
-    if(debug === 1) 
-        imfigWindow.webContents.openDevTools();
+  imfigWindow.show();
+  if(debug === 1) 
+    imfigWindow.webContents.openDevTools();
 });
 
 ipcMain.on('show-help', function () {
@@ -114,16 +161,62 @@ ipcMain.on('show-help', function () {
       height: winheight
   });
   helpWindow.loadURL('file://'+__dirname+'/help.html');
-    helpWindow.show();
-    if(debug === 1) 
-        helpWindow.webContents.openDevTools();
+  helpWindow.show();
+  if(debug === 1) 
+    helpWindow.webContents.openDevTools();
+  helpWindow.webContents.on('new-window',function(e,url) {
+    e.preventDefault();
+    sh.openExternal(url);
+  });
 });
 
+function createTextWindow(pth) {
+    var newTextWindow = new BrowserWindow({
+        width: winwidth, 
+        height: winheight
+    });
+    textWindowArray.push(newTextWindow);
+    newTextWindow.loadURL('file://'+__dirname+'/text_viewer.html');
+    if(debug === 1) 
+        newTextWindow.webContents.openDevTools();
+    newTextWindow.webContents.on('did-finish-load', function () {
+        var readMode = fs.readFile(pth,'utf8',function(err,contents) {
+            //console.log('read file '+err);
+            if(err != null && err.code === 'ENOENT') {
+                newTextWindow.webContents.send('file-not-found',pth);
+            } else {
+                newTextWindow.webContents.send('file-contents',pth,contents);
+            }
+        });
+    });
+}
+
+ipcMain.on('test-text', function (e,pth) { 
+    createTextWindow(pth);
+});
+
+ipcMain.on('load-input', function(e,id) {
+    createTextWindow(jobList[id].files.infile);
+});
+ipcMain.on('load-output', function(e,id) {
+    createTextWindow(jobList[id].files.outfile);
+});
+ipcMain.on('load-prior', function(e,id) {
+    createTextWindow(jobList[id].files.paramfile);
+});
+ipcMain.on('load-burntrend', function(e,id) {
+    createTextWindow(jobList[id].files.burnfile);
+});
+
+/*ipcMain.on('read-file', function () {
+    fs.readFile('t.txt','utf8',function(err,contents) {
+        textWindowArray.webContents.send('file-contents',contents);
+    });
+});*/
 
 
 //Variables for job list and active index, paths to scripts and exes
 var jobIdx = 0;
-var jobList = [];
 var IMA_PATH_UNIX = path.join(dirPath,'IMa','IMa2');
 var IMA_PATH_WIN = path.join('resources','app','IMa','IMa2.exe');
 var IMFIG_PATH_UNIX = path.join(dirPath,'scripts','IMfig3');
@@ -251,6 +344,7 @@ function createJob(reqObj) {
     console.log(tJob.args);
     tJob.status = 0;
     tJob.pid = -1;
+    tJob.files = reqObj.files;
     return tJob;
 }
 
@@ -334,7 +428,9 @@ ipcMain.on('run',function(e,data) {
             name: job.name,
             fail: 0,
             burn: data.burn,
-            run: data.run
+            run: data.run,
+            inprior: (job.files.paramfile === 'X') ? 0 : 1,
+            inburn: (job.files.burnfile === 'X') ? 0 : 1
         };
         e.sender.send('run_response',j);
         jobList.push(job);
@@ -388,7 +484,9 @@ ipcMain.on('change',function(e,data) {
         var j = {
             done: jobList[id].status,
             burn: (jobList[id].burn == 1) ? 1 : 0,
-            run: (jobList[id].run == 1) ? 1 : 0
+            run: (jobList[id].run == 1) ? 1 : 0,
+            inprior: (jobList[id].files.paramfile === 'X') ? 0 : 1,
+            inburn: (jobList[id].files.burnfile === 'X') ? 0 : 1
         };
     }
     e.sender.send('change_response',j);
@@ -532,21 +630,4 @@ ipcMain.on('refresh', function(e,data) {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-ipcMain.on('test-signal', function () {
-    console.log('signal sent');
-    var p = path.join(dirPath,'IMa2');
-    var proc = spawn(p,['-h']);
-    proc.stdout.setEncoding('utf-8');
-    proc.on('close', function (e) {
-        console.log('random number generated');
-        console.log(e);
-        mainWindow.webContents.send('test_response','hello from the other side');
-    });
-    proc.on('error', function (e) {
-        console.log('error');
-        console.log(e);
-    });
-    proc.stdout.on('data',function(data) {
-        console.log(data);
-    });
-});
+

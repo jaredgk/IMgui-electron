@@ -10,10 +10,14 @@ var ipcRenderer = require('electron').ipcRenderer;
 var remote = require('electron').remote;
 var pwd = remote.getGlobal('sharedObj').pwd;
 var homedir = remote.getGlobal('sharedObj').homedir;
+var sep = remote.getGlobal('sharedObj').sep;
+var mt = remote.getGlobal('sharedObj').mt;
+var os = remote.getGlobal('sharedObj').os;
+var sampledir = remote.getGlobal('sharedObj').sampledir;
 
 function getName(el) {
     var pref = '';
-    if($('#working-dir').val().length !== 0) {
+    if($('#working-dir').val().length !== 0 && $(el).val().indexOf(sep) == -1) {
         pref = $('#working-dir').val().replace(/[ ]/g,'%20');
         if(pref[pref.length-1] !== sep) { pref += sep; }
     }
@@ -120,6 +124,9 @@ function printParams() {
     if (j.length > 2) { cmdline += (j + ' '); }
     if (p.length > 2) { cmdline += (p + ' '); }
     if (r.length > 2) { cmdline += (r + ' '); }
+    var ima_exe = './IMa2 ';
+    if(os == 'win32') { ima_exe = 'IMa2.exe '; }
+    $('#cmd-line-area').val(ima_exe+cmdline);
     return cmdline;
 }
 
@@ -149,6 +156,36 @@ function mcmc() {
 //Checks if variable is an integer, can probably be done better
 function intCheck(n) {
     return n % 1 === 0;
+}
+
+function makeFileList() {
+    var files = {
+        infile: getName('#infile'),
+        paramfile: 'X',
+        outfile: getName('#outtag'),
+        burnfile: 'X'
+    };
+    if($('#c4').is(':checked')) {
+        files.paramfile = getName('#paramf');
+    }
+    if($('#imburn-check').is(':checked') || $('#r5').is(':checked')) {
+        files.burnfile = (getName('#outtag')+'.burntrend');
+    }
+    return files;
+}
+
+function makeFileTab(priorflag,burnflag) {
+    console.log('makefiletab');
+    $('#in-file-drop').removeClass('disabled-link');
+    $('#prior-file-drop').addClass('disabled-link');
+    $('#output-file-drop').removeClass('disabled-link');
+    $('#burntrend-file-drop').addClass('disabled-link');
+    if(priorflag !== 0) {
+        $('#prior-file-drop').removeClass('disabled-link');
+    }
+    if(burnflag !== 0) {
+        $('#burntrend-file-drop').removeClass('disabled-link');
+    }
 }
 
 //Adds red color to selected elements if the associated input is invalid
@@ -209,12 +246,13 @@ ipcRenderer.on('change_response',function(e,data) {
     else if(data.done === 1 || data.done === 2) {
         setButtons(0,0,0,1,1);
     }
+    makeFileTab(data.inprior,data.inburn);
     
 });
 
 //Code for testing, 'setvals' button is not currently in HTML
 $('#demo-input').click(function () {
-    $('#working-dir').val(pwd+sep+'sample'+sep);
+    $('#working-dir').val(sampledir+sep+'sample'+sep);
     $('#infile').val('ima2_testinput.u');
     $('#outtag').val('testjob.out');
     $('#nametag').val('Test Job');
@@ -224,6 +262,13 @@ $('#demo-input').click(function () {
     $('#mps').val(3);
     $('#mpv').val(1);
     $('#mtps').val(2);
+    $('#t6').collapse('toggle');
+    $('#mc-check').prop('checked',true);
+    $('input.disableheat').attr("disabled", false);
+    $('input[name=heating-type]:nth(1)').prop('checked',true);
+    $('#burn-noc').val(5);
+    $('#burn-first').val(0.99);
+    $('#burn-second').val(0.3);
 });
 
 $('#analyze-link').click(function () {
@@ -236,6 +281,26 @@ $('#imfig-link').click(function () {
 
 $('#help-link').click(function () {
     ipcRenderer.send('show-help');
+});
+
+$('#in-file-drop').click(function () {
+    var id = $('#jobselect').val();
+    ipcRenderer.send('load-input',id);
+});
+
+$('#output-file-drop').click(function () {
+    var id = $('#jobselect').val();
+    ipcRenderer.send('load-output',id);
+});
+
+$('#prior-file-drop').click(function () {
+    var id = $('#jobselect').val();
+    ipcRenderer.send('load-prior',id);
+});
+
+$('#burntrend-file-drop').click(function () {
+    var id = $('#jobselect').val();
+    ipcRenderer.send('load-burntrend',id);
 });
 
 //Probably redundant function
@@ -272,6 +337,7 @@ function submitJobRequest() {
         run = 1;
     }
     var name = getJobName();
+    var files = makeFileList();
     var num_process = $('#num-process').val().length !== 0 ? $('#num-process').val() : 1;
     ipcRenderer.send('run',{
         cmd: s,
@@ -279,27 +345,9 @@ function submitJobRequest() {
         name: name,
         burn: burn,
         run: run,
-        num_process: num_process
+        num_process: num_process,
+        files: files
     });
-    /*$.post('/', {
-        post: 'run',
-        cmd: s,
-        prefix: o,
-        name: name,
-        burn: burn,
-        run: run,
-        num_process: num_process
-    }, function (data) {
-        if(data.fail === 1) {
-            var msg = "Error: "+o+" is already stored as a used prefix, delete the job from the job manager to reuse";
-            errmsg(msg);
-        }
-        else {
-            $('#refresh').removeAttr('disabled');
-            addJobOption(data.name,data.id,1);
-            setButtons(1,burn,run,0,0);
-        }
-    });*/
 }
 
 ipcRenderer.on('run_response', function(e,data) {
@@ -311,6 +359,7 @@ ipcRenderer.on('run_response', function(e,data) {
         $('#refresh').removeAttr('disabled');
         addJobOption(data.name,data.id,1);
         setButtons(1,data.burn,data.run,0,0);
+        makeFileTab(data.inprior,data.inburn);
     }
 });
 
@@ -476,6 +525,11 @@ function validateArgs() {
             $('#run-div').addClass('bg-danger');
         }
     }
+    if(!($('#mc-check').is(':checked')) && $('#num-process').val() >= 2) {
+        fl = 1;
+        errmsg('Multithreaded runs must provide heating terms');
+        $('#b6').addClass('btn-danger');
+    }
     if ($('#mc-check').is(':checked')) {
         if ($('#burn-noc').val().length === 0) {
             fl = 1;
@@ -522,6 +576,7 @@ ipcRenderer.on('gl_response',function(e,data) {
     }    
 });
 
+
 //When received from server, will add data to output window
 //socket.on('process_data',function(data) {
 ipcRenderer.on('process_data',function(e,data) {
@@ -554,9 +609,10 @@ ipcRenderer.on('run-signal', function(e,data) {
 
 $(document).ready(function () {
     //Adding until parallel windows version is distributed
-    if(navigator.appVersion.indexOf("Win") != -1) {
+    if(mt == 0) {
         $('#num-process').attr('disabled','disabled');
     }
+    $('[data-toggle="popover"]').popover({html:true});
     $('#jobselect').change(function () {
         changeJob();
     });
@@ -635,8 +691,17 @@ $(document).ready(function () {
 
     });
     
-    $('#bbbb').click(function () {
-        ipcRenderer.send('test-signal','dataaaaaaaa');
+    
+    $('#infile-prev').click(function () {
+        ipcRenderer.send('test-text',getName('#infile'));
+    });
+    
+    $('#prior-prev').click(function () {
+        ipcRenderer.send('test-text',getName('#paramf'));
+    });
+    
+    $('#drop-file-link').click(function () {
+        ipcRenderer.send('test-text','t.txt');
     });
 
 $('#j2').click(function () {
@@ -714,7 +779,7 @@ $("#r6").click(function () {
 
 $('input').change(function () {
     "use strict";
-    printParams();
+    var p = printParams();
 });
 
 });

@@ -97,6 +97,20 @@ th,td {
     overflow-y: scroll;
     height: 300px;
 }
+.cmdtextarea {
+    overflow-y: scroll;
+    height: 80px;
+}
+.file-reader-area {
+    width:100%;
+    height:100%;
+    white-space: pre;
+    overflow-x:auto;
+}
 .divspace {
     margin: 20px 0px 20px 0px;
+}
+
+.dropdown-menu>li>a.disabled-link {
+    color: grey;
 }

@@ -1,7 +1,7 @@
 {
-  "name": "electron-quick-start",
+  "name": "IMgui-electron",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "A GUI for IMa2 using the electron framework",
   "main": "main.js",
   "scripts": {
     "build": "electron-packager . TestApp --platform=linux --arch=x64 --version=1.2.0",
@@ -10,20 +10,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/electron/electron-quick-start.git"
+    "url": "git+https://github.com/jaredgk/IMgui-electron"
   },
-  "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial"
-  ],
-  "author": "GitHub",
+  "author": "Jared Knoblauch, Arun Sethuraman, Jody Hey",
   "license": "CC0-1.0",
-  "bugs": {
-    "url": "https://github.com/electron/electron-quick-start/issues"
-  },
-  "homepage": "https://github.com/electron/electron-quick-start#readme",
   "devDependencies": {
     "electron-prebuilt": "^1.2.0"
   }

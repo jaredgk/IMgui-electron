@@ -467,6 +467,7 @@ $(document).ready( function () {
 //On click, will check for valid XML file/filename, then clear existing graph/table, populate select tab, identify file type, and call appropriate display function
 $('#xmlsb').click(function () {
     var files = document.getElementById('xmlup').files;
+    console.log(document.getElementById('xmlup').files[0].path);
     if(files.length === 0) {
         alert('Must provide an XML output file');
         return;

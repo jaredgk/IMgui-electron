@@ -15,14 +15,14 @@
             <form role="form" id="imfig-form">
                 <div class="form-group">
                     <label for="input-file">Input File (Required)</label>
-                    <input type="text" class="form-control" id="input-file">
+                    <input type="file" class="btn btn-default" id="input-file">
                 </div>
                 <div class="form-group">
                     <label for="output-file">Output File Prefix (no directory)</label>
                     <input type="text" class="form-control" id="output-file">
                 </div>
                 <div class="form-group">
-                    <label for="font-type">Font (default is Arial)</label>
+                    <label for="font-type">Font (default is Arial) (Note that this option requires</label>
                     <input type="text" class="form-control" id="font-type">
                 </div>
                 <div>
@@ -62,7 +62,7 @@
                 <div>
                     <p class="small-p"><input type="checkbox" id="a-check">Include Ancestral Population #'s in Plot</p>
                     <p class="small-p"><input type="checkbox" id="e-check">Space Split Times Evenly (no confidence intervals)</p>
-                    <p class="small-p"><input type="checkbox" id="d-check">Do Not Use Demographic Scale Information</p>
+                    <p class="small-p"><input type="checkbox" id="d-check">Use Demographic Scale Information From File (IMa run must use -p3 option)</p>
                     <p class="small-p"><input type="checkbox" id="s-check">Print Square, Rather Than Landscape</p>
                     <p class="small-p"><input type="checkbox" id="u-check">Simple colors, blue for population boxes and red for migration</p>
                     <p class="small-p"><input type="checkbox" id="v-check">Multiple colors for population boxes, red arrows for migration</p>

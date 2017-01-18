@@ -27,12 +27,18 @@ function createCmdLine() {
     var ro = {};
     var args = [];
     $('.err-add').remove();
-    var cc = $('#input-file').val();
+    /*var cc = $('#input-file').val();
     if(cc.length !== 0) {
         if(cc[0] == '~') {
             var t = cc.replace('~',homedir);
             cc = t;
         }
+        args.push('-i'+cc.replace(/[ ]/,'%20'));
+    }*/
+    var cl = document.getElementById('input-file').files.length;
+    var cc;
+    if(cl != 0) {
+        cc = document.getElementById('input-file').files[0].path;
         args.push('-i'+cc.replace(/[ ]/,'%20'));
     } else {
         fl = 1;
@@ -129,7 +135,7 @@ function createCmdLine() {
     }
     if($('#a-check').is(':checked')) { args.push('-a'); }
     if($('#e-check').is(':checked')) { args.push('-e'); }
-    if($('#d-check').is(':checked')) { args.push('-d'); }
+    if($('#d-check').is(':checked') == false) { args.push('-d'); }
     if($('#s-check').is(':checked')) { args.push('-s'); }
     if($('#u-check').is(':checked')) { args.push('-u'); }
     if($('#v-check').is(':checked')) { args.push('-v'); }
